@@ -37,7 +37,7 @@
     .qr-header{display:flex;align-items:center;margin-bottom:20px;}
     .back-btn{background:none;border:none;color:var(--gold);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:0;margin-right:12px;}
     .qr-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-    .qr-name-cn{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;color:var(--text);letter-spacing:4px;margin-bottom:4px;text-align:center;}
+    .qr-name-cn{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:700;color:var(--text);letter-spacing:4px;margin-bottom:4px;text-align:center;}
     .qr-name-en{font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;text-align:center;}
     .qr-meta{font-size:10px;color:var(--gold);letter-spacing:2px;text-align:center;margin-bottom:4px;}
     .qr-id{font-size:10px;color:rgba(200,169,110,0.5);letter-spacing:2px;text-align:center;margin-bottom:20px;}
@@ -151,70 +151,76 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
   const canvas = document.getElementById('qrCanvas');
   const ctx = canvas.getContext('2d');
 
-  // Load background and QR simultaneously
   const [bgImg, qrImg] = await Promise.all([
     loadImage(BG_URL),
     loadImage(qrApiUrl)
   ]);
 
-  // Canvas = card dimensions (portrait)
-  const W = 360, H = 540;
+  const W = 360, H = 560;
   canvas.width = W;
   canvas.height = H;
 
   // Background
   ctx.drawImage(bgImg, 0, 0, W, H);
 
-  // Dark overlay
-  ctx.fillStyle = 'rgba(10,5,2,0.45)';
+  // Subtle dark overlay only on bottom half for text readability
+  const grad = ctx.createLinearGradient(0, H * 0.35, 0, H);
+  grad.addColorStop(0, 'rgba(10,5,2,0)');
+  grad.addColorStop(0.4, 'rgba(10,5,2,0.55)');
+  grad.addColorStop(1, 'rgba(10,5,2,0.82)');
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  // QR Code white background
-  const qrSize = 200;
+  // QR Code — centered, sitting in upper-middle area
+  const qrSize = 210;
   const qrX = (W - qrSize) / 2;
-  const qrY = 60;
+  const qrY = H * 0.18; // ~100px from top
+
+  // White QR background with padding
   ctx.fillStyle = '#ffffff';
   ctx.beginPath();
-  ctx.roundRect(qrX - 8, qrY - 8, qrSize + 16, qrSize + 16, 8);
+  ctx.roundRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20, 10);
   ctx.fill();
 
-  // QR Code
+  // Draw QR
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
-  // Divider line
-  ctx.strokeStyle = 'rgba(200,169,110,0.4)';
-  ctx.lineWidth = 1;
+  // Text block starts below QR
+  const textStart = qrY + qrSize + 36;
+
+  // Thin gold divider
+  ctx.strokeStyle = 'rgba(200,169,110,0.5)';
+  ctx.lineWidth = 0.8;
   ctx.beginPath();
-  ctx.moveTo(40, qrY + qrSize + 30);
-  ctx.lineTo(W - 40, qrY + qrSize + 30);
+  ctx.moveTo(60, textStart - 16);
+  ctx.lineTo(W - 60, textStart - 16);
   ctx.stroke();
 
-  // Chinese name
+  // Chinese name — medium size
   ctx.fillStyle = '#f0e6d3';
-  ctx.font = 'bold 28px "Noto Serif SC", serif';
+  ctx.font = 'bold 22px "Noto Serif SC", serif';
   ctx.textAlign = 'center';
-  ctx.fillText(nameCN, W / 2, qrY + qrSize + 65);
+  ctx.fillText(nameCN, W / 2, textStart + 4);
 
   // English name
-  ctx.fillStyle = 'rgba(240,230,211,0.65)';
-  ctx.font = '13px Montserrat, sans-serif';
-  ctx.fillText(nameEN, W / 2, qrY + qrSize + 88);
+  ctx.fillStyle = 'rgba(240,230,211,0.6)';
+  ctx.font = '12px Montserrat, sans-serif';
+  ctx.fillText(nameEN, W / 2, textStart + 24);
 
   // Role
   ctx.fillStyle = '#c8a96e';
-  ctx.font = '600 12px Montserrat, sans-serif';
-  ctx.letterSpacing = '2px';
-  ctx.fillText(crewRole, W / 2, qrY + qrSize + 112);
+  ctx.font = '600 11px Montserrat, sans-serif';
+  ctx.fillText(crewRole, W / 2, textStart + 46);
 
   // ID
   ctx.fillStyle = 'rgba(200,169,110,0.45)';
-  ctx.font = '10px Montserrat, sans-serif';
-  ctx.fillText(`ID: ${id}`, W / 2, qrY + qrSize + 132);
-
-  // Event name at bottom
-  ctx.fillStyle = 'rgba(240,230,211,0.25)';
   ctx.font = '9px Montserrat, sans-serif';
-  ctx.fillText('寻昔纪远 · CULTURE CAMP 2026', W / 2, H - 20);
+  ctx.fillText(`ID: ${id}`, W / 2, textStart + 64);
+
+  // Event name at very bottom
+  ctx.fillStyle = 'rgba(240,230,211,0.22)';
+  ctx.font = '8px Montserrat, sans-serif';
+  ctx.fillText('寻昔纪远 · CULTURE CAMP 2026', W / 2, H - 16);
 }
 
 function loadImage(src) {
