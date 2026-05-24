@@ -174,7 +174,7 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
   // QR Code — centered, sitting in upper-middle area
   const qrSize = 210;
   const qrX = (W - qrSize) / 2;
-  const qrY = H * 0.18; // ~100px from top
+  const qrY = H * 0.30; // ~100px from top
 
   // White QR background with padding
   ctx.fillStyle = '#ffffff';
@@ -198,23 +198,23 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
 
   // Chinese name — medium size
   ctx.fillStyle = '#f0e6d3';
-  ctx.font = 'bold 22px "Noto Serif SC", serif';
+  ctx.font = 'bold 18px "KaiTi", serif';
   ctx.textAlign = 'center';
-  ctx.fillText(nameCN, W / 2, textStart + 4);
+  ctx.fillText(nameCN, W / 2, textStart + 5);
 
   // English name
   ctx.fillStyle = 'rgba(240,230,211,0.6)';
-  ctx.font = '12px Montserrat, sans-serif';
-  ctx.fillText(nameEN, W / 2, textStart + 24);
+  ctx.font = '14px Montserrat, sans-serif';
+  ctx.fillText(nameEN, W / 2, textStart + 25);
 
   // Role
   ctx.fillStyle = '#c8a96e';
-  ctx.font = '600 11px Montserrat, sans-serif';
+  ctx.font = '600 12px "KaiTi", sans-serif';
   ctx.fillText(crewRole, W / 2, textStart + 46);
 
   // ID
   ctx.fillStyle = 'rgba(200,169,110,0.45)';
-  ctx.font = '9px Montserrat, sans-serif';
+  ctx.font = '10px Montserrat, sans-serif';
   ctx.fillText(`ID: ${id}`, W / 2, textStart + 64);
 
   // Event name at very bottom
