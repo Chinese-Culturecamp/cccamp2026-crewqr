@@ -174,7 +174,7 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
   // QR Code — centered, sitting in upper-middle area
   const qrSize = 210;
   const qrX = (W - qrSize) / 2;
-  const qrY = H * 0.35; // ~100px from top
+  const qrY = H * 0.50; // ~100px from top
 
   // White QR background with padding
   ctx.fillStyle = '#ffffff';
@@ -186,7 +186,7 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
   // Text block starts below QR
-  const textStart = qrY + qrSize + 36;
+  const textStart = qrY + qrSize + 40;
 
   // Thin gold divider
   ctx.strokeStyle = 'rgba(200,169,110,0.5)';
@@ -210,17 +210,17 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
   // Role
   ctx.fillStyle = '#c8a96e';
   ctx.font = '600 12px "KaiTi", sans-serif';
-  ctx.fillText(crewRole, W / 2, textStart + 46);
+  ctx.fillText(crewRole, W / 2, textStart + 25);
 
   // ID
   ctx.fillStyle = 'rgba(200,169,110,0.45)';
   ctx.font = '10px Montserrat, sans-serif';
-  ctx.fillText(`ID: ${id}`, W / 2, textStart + 64);
+  ctx.fillText(`ID: ${id}`, W / 2, textStart + 75);
 
   // Event name at very bottom
   ctx.fillStyle = 'rgba(240,230,211,0.22)';
   ctx.font = '8px Montserrat, sans-serif';
-  ctx.fillText('寻昔纪远 · CULTURE CAMP 2026', W / 2, H - 16);
+  ctx.fillText('寻昔纪远 · CHINESE CULTURE CAMP 2026', W / 2, H - 16);
 }
 
 function loadImage(src) {
