@@ -7,47 +7,49 @@
   <title>寻昔纪远 · Crew QR Code</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    :root { --gold:#c8a96e; --gold2:rgba(200,169,110,0.4); --dark:#1a0e08; --card-bg:rgba(20,10,5,0.85); --text:#f0e6d3; --muted:rgba(240,230,211,0.5); }
-    body { min-height:100vh; background:var(--dark); font-family:'Montserrat',sans-serif; color:var(--text); position:relative; overflow-x:hidden; }
-    .bg { position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('https://i.imgur.com/8I0PjjL.jpeg'); background-size:cover; background-position:center; opacity:0.35; z-index:0; }
-    .wrap { position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 20px; }
-    .title { font-family:'Noto Serif SC',serif; font-size:24px; letter-spacing:5px; color:var(--text); margin-bottom:4px; text-align:center; }
-    .sub { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:32px; text-align:center; }
-    .card { background:var(--card-bg); border:1px solid var(--gold2); border-radius:12px; padding:28px 24px; width:100%; max-width:400px; }
-    .field-label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
-    .search-row { display:flex; gap:8px; margin-bottom:16px; }
-    .search-input { flex:1; padding:12px 14px; background:rgba(255,255,255,0.05); border:1px solid var(--gold2); border-radius:8px; color:var(--text); font-family:'Montserrat',sans-serif; font-size:14px; outline:none; }
-    .search-input:focus { border-color:var(--gold); }
-    .search-input::placeholder { color:var(--muted); }
-    .search-btn { padding:12px 18px; border-radius:8px; cursor:pointer; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; border:1px solid var(--gold); background:rgba(200,169,110,0.2); color:var(--gold); }
-    .search-btn:active { opacity:0.7; }
-    .results { display:none; }
-    .results.show { display:block; }
-    .results-label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-    .result-item { background:rgba(255,255,255,0.04); border:1px solid var(--gold2); border-radius:8px; padding:12px 14px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:space-between; }
-    .result-item:active { background:rgba(200,169,110,0.15); border-color:var(--gold); }
-    .result-name-cn { font-family:'Noto Serif SC',serif; font-size:15px; color:var(--text); letter-spacing:2px; }
-    .result-name-en { font-size:10px; color:var(--muted); letter-spacing:1px; margin-top:2px; }
-    .result-arrow { color:var(--gold); font-size:14px; }
-    .no-result { font-size:12px; color:var(--muted); text-align:center; letter-spacing:1px; padding:12px 0; }
-    .qr-view { display:none; }
-    .qr-view.show { display:block; }
-    .qr-header { display:flex; align-items:center; margin-bottom:20px; }
-    .back-btn { background:none; border:none; color:var(--gold); cursor:pointer; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:0; margin-right:12px; }
-    .qr-title { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
-    .qr-name-cn { font-family:'Noto Serif SC',serif; font-size:22px; font-weight:700; color:var(--text); letter-spacing:4px; margin-bottom:4px; text-align:center; }
-    .qr-name-en { font-size:11px; color:var(--muted); letter-spacing:1px; margin-bottom:6px; text-align:center; }
-    .qr-id { font-size:10px; color:rgba(200,169,110,0.6); letter-spacing:2px; text-align:center; margin-bottom:20px; }
-    .qr-img-wrap { display:flex; justify-content:center; margin-bottom:20px; }
-    .qr-img-wrap img { width:200px; height:200px; border-radius:8px; background:white; padding:6px; }
-    .qr-hint { font-size:10px; color:var(--muted); letter-spacing:1px; text-align:center; margin-bottom:16px; }
-    .download-btn { width:100%; padding:12px; border-radius:8px; cursor:pointer; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; border:1px solid var(--gold2); background:rgba(200,169,110,0.12); color:var(--gold); text-decoration:none; display:block; text-align:center; }
-    .event-name { font-size:9px; color:rgba(240,230,211,0.25); letter-spacing:2px; text-transform:uppercase; text-align:center; margin-top:20px; }
-    .loading { position:fixed; inset:0; background:rgba(10,5,2,0.7); display:none; align-items:center; justify-content:center; z-index:999; }
-    .loading.show { display:flex; }
-    .spinner { width:36px; height:36px; border:2px solid var(--gold2); border-top-color:var(--gold); border-radius:50%; animation:spin 0.7s linear infinite; }
-    @keyframes spin { to { transform:rotate(360deg); } }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{--gold:#c8a96e;--gold2:rgba(200,169,110,0.4);--dark:#1a0e08;--card-bg:rgba(20,10,5,0.85);--text:#f0e6d3;--muted:rgba(240,230,211,0.5);}
+    body{min-height:100vh;background:var(--dark);font-family:'Montserrat',sans-serif;color:var(--text);position:relative;overflow-x:hidden;}
+    .bg{position:fixed;top:0;left:0;width:100%;height:100%;background-image:url('https://i.imgur.com/8I0PjjL.jpeg');background-size:cover;background-position:center;opacity:0.35;z-index:0;}
+    .wrap{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;}
+    .title{font-family:'Noto Serif SC',serif;font-size:24px;letter-spacing:5px;color:var(--text);margin-bottom:4px;text-align:center;}
+    .sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;text-align:center;}
+    .card{background:var(--card-bg);border:1px solid var(--gold2);border-radius:12px;padding:28px 24px;width:100%;max-width:400px;}
+    .field-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+    .search-row{display:flex;gap:8px;margin-bottom:16px;}
+    .search-input{flex:1;padding:12px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--gold2);border-radius:8px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:14px;outline:none;}
+    .search-input:focus{border-color:var(--gold);}
+    .search-input::placeholder{color:var(--muted);}
+    .search-btn{padding:12px 18px;border-radius:8px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--gold);background:rgba(200,169,110,0.2);color:var(--gold);}
+    .search-btn:active{opacity:0.7;}
+    .results{display:none;}
+    .results.show{display:block;}
+    .results-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+    .result-item{background:rgba(255,255,255,0.04);border:1px solid var(--gold2);border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+    .result-item:active{background:rgba(200,169,110,0.15);border-color:var(--gold);}
+    .result-name-cn{font-family:'Noto Serif SC',serif;font-size:15px;color:var(--text);letter-spacing:2px;}
+    .result-name-en{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:2px;}
+    .result-role{font-size:10px;color:var(--gold);letter-spacing:1px;margin-top:2px;}
+    .result-arrow{color:var(--gold);font-size:14px;}
+    .no-result{font-size:12px;color:var(--muted);text-align:center;letter-spacing:1px;padding:12px 0;}
+    .qr-view{display:none;}
+    .qr-view.show{display:block;}
+    .qr-header{display:flex;align-items:center;margin-bottom:20px;}
+    .back-btn{background:none;border:none;color:var(--gold);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:0;margin-right:12px;}
+    .qr-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+    .qr-name-cn{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;color:var(--text);letter-spacing:4px;margin-bottom:4px;text-align:center;}
+    .qr-name-en{font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;text-align:center;}
+    .qr-meta{font-size:10px;color:var(--gold);letter-spacing:2px;text-align:center;margin-bottom:4px;}
+    .qr-id{font-size:10px;color:rgba(200,169,110,0.5);letter-spacing:2px;text-align:center;margin-bottom:20px;}
+    .qr-img-wrap{display:flex;justify-content:center;margin-bottom:16px;}
+    .qr-img-wrap canvas{border-radius:8px;max-width:100%;}
+    .qr-hint{font-size:10px;color:var(--muted);letter-spacing:1px;text-align:center;margin-bottom:16px;}
+    .download-btn{width:100%;padding:12px;border-radius:8px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--gold2);background:rgba(200,169,110,0.12);color:var(--gold);text-decoration:none;display:block;text-align:center;}
+    .event-name{font-size:9px;color:rgba(240,230,211,0.25);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-top:20px;}
+    .loading{position:fixed;inset:0;background:rgba(10,5,2,0.7);display:none;align-items:center;justify-content:center;z-index:999;}
+    .loading.show{display:flex;}
+    .spinner{width:36px;height:36px;border:2px solid var(--gold2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
   </style>
 </head>
 <body>
@@ -75,61 +77,165 @@
       </div>
       <div class="qr-name-cn" id="qrNameCN"></div>
       <div class="qr-name-en" id="qrNameEN"></div>
+      <div class="qr-meta" id="qrMeta"></div>
       <div class="qr-id" id="qrID"></div>
-      <div class="qr-img-wrap"><img id="qrImg" src="" alt="QR Code"></div>
+      <div class="qr-img-wrap"><canvas id="qrCanvas"></canvas></div>
       <div class="qr-hint">Screenshot or download to save your QR Code</div>
-      <a class="download-btn" id="downloadBtn" href="" download="crew_qr.png" target="_blank">Download QR Code</a>
+      <a class="download-btn" href="#" onclick="downloadQR(event)">Download QR Code</a>
       <div class="event-name">寻昔纪远 · Culture Camp 2026</div>
     </div>
   </div>
 </div>
 <script>
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwNniD-7Uwpus7k-ZhWTrGZpeh60qVilmWthAvlXtvkwks5WSXOQrTm1WcVaQCpsQ4A/exec";
+const BG_URL = "https://i.imgur.com/N2Ktl01.jpeg";
 let cachedData = null;
+let currentQRData = null;
 
-document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') doSearch(); });
+document.getElementById('searchInput').addEventListener('keypress', e => { if(e.key==='Enter') doSearch(); });
 
 async function getData() {
-  if (cachedData) return cachedData;
+  if(cachedData) return cachedData;
   showLoading(true);
   const res = await fetch(`${WEB_APP_URL}?action=get_crew_data`);
   const data = await res.json();
   showLoading(false);
-  if (data.success) cachedData = data.rows;
+  if(data.success) cachedData = data.rows;
   return data.rows || [];
 }
 
 async function doSearch() {
   const query = document.getElementById('searchInput').value.trim().toLowerCase();
-  if (!query) return;
+  if(!query) return;
   const rows = await getData();
-  const matches = rows.filter(r => String(r[1]||'').toLowerCase().includes(query) || String(r[2]||'').toLowerCase().includes(query));
+  const matches = rows.filter(r =>
+    String(r[1]||'').toLowerCase().includes(query) ||
+    String(r[2]||'').toLowerCase().includes(query)
+  );
   const box = document.getElementById('resultsBox');
   const label = document.getElementById('resultsLabel');
   const list = document.getElementById('resultsList');
   box.classList.add('show');
-  if (matches.length === 0) {
+  if(matches.length === 0) {
     label.textContent = 'No results found';
     list.innerHTML = '<div class="no-result">Try a different name spelling.</div>';
     return;
   }
   label.textContent = `${matches.length} result${matches.length > 1 ? 's' : ''} found`;
   list.innerHTML = matches.map(r => `
-    <div class="result-item" onclick="showQR('${r[0]}','${esc(r[1])}','${esc(r[2])}')">
-      <div><div class="result-name-cn">${r[1]}</div><div class="result-name-en">${r[2]}</div></div>
+    <div class="result-item" onclick="showQR('${r[0]}','${esc(r[1])}','${esc(r[2])}','${esc(r[3]||'')}')">
+      <div>
+        <div class="result-name-cn">${r[1]}</div>
+        <div class="result-name-en">${r[2]}</div>
+        <div class="result-role">${r[3]||''}</div>
+      </div>
       <div class="result-arrow">›</div>
     </div>`).join('');
 }
 
-function showQR(id, nameCN, nameEN) {
-  const qrUrl = `https://quickchart.io/qr?text=${encodeURIComponent(String(id))}&size=300&margin=2`;
+async function showQR(id, nameCN, nameEN, crewRole) {
+  currentQRData = { id, nameCN, nameEN, crewRole };
   document.getElementById('qrNameCN').textContent = nameCN;
   document.getElementById('qrNameEN').textContent = nameEN;
+  document.getElementById('qrMeta').textContent = crewRole;
   document.getElementById('qrID').textContent = `ID: ${id}`;
-  document.getElementById('qrImg').src = qrUrl;
-  document.getElementById('downloadBtn').href = qrUrl;
   document.getElementById('searchView').style.display = 'none';
   document.getElementById('qrView').classList.add('show');
+  showLoading(true);
+  await generateQRCanvas(id, nameCN, nameEN, crewRole);
+  showLoading(false);
+}
+
+async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
+  const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(String(id))}&size=300&margin=2`;
+  const canvas = document.getElementById('qrCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Load background and QR simultaneously
+  const [bgImg, qrImg] = await Promise.all([
+    loadImage(BG_URL),
+    loadImage(qrApiUrl)
+  ]);
+
+  // Canvas = card dimensions (portrait)
+  const W = 360, H = 540;
+  canvas.width = W;
+  canvas.height = H;
+
+  // Background
+  ctx.drawImage(bgImg, 0, 0, W, H);
+
+  // Dark overlay
+  ctx.fillStyle = 'rgba(10,5,2,0.45)';
+  ctx.fillRect(0, 0, W, H);
+
+  // QR Code white background
+  const qrSize = 200;
+  const qrX = (W - qrSize) / 2;
+  const qrY = 60;
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.roundRect(qrX - 8, qrY - 8, qrSize + 16, qrSize + 16, 8);
+  ctx.fill();
+
+  // QR Code
+  ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+
+  // Divider line
+  ctx.strokeStyle = 'rgba(200,169,110,0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(40, qrY + qrSize + 30);
+  ctx.lineTo(W - 40, qrY + qrSize + 30);
+  ctx.stroke();
+
+  // Chinese name
+  ctx.fillStyle = '#f0e6d3';
+  ctx.font = 'bold 28px "Noto Serif SC", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(nameCN, W / 2, qrY + qrSize + 65);
+
+  // English name
+  ctx.fillStyle = 'rgba(240,230,211,0.65)';
+  ctx.font = '13px Montserrat, sans-serif';
+  ctx.fillText(nameEN, W / 2, qrY + qrSize + 88);
+
+  // Role
+  ctx.fillStyle = '#c8a96e';
+  ctx.font = '600 12px Montserrat, sans-serif';
+  ctx.letterSpacing = '2px';
+  ctx.fillText(crewRole, W / 2, qrY + qrSize + 112);
+
+  // ID
+  ctx.fillStyle = 'rgba(200,169,110,0.45)';
+  ctx.font = '10px Montserrat, sans-serif';
+  ctx.fillText(`ID: ${id}`, W / 2, qrY + qrSize + 132);
+
+  // Event name at bottom
+  ctx.fillStyle = 'rgba(240,230,211,0.25)';
+  ctx.font = '9px Montserrat, sans-serif';
+  ctx.fillText('寻昔纪远 · CULTURE CAMP 2026', W / 2, H - 20);
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function downloadQR(e) {
+  e.preventDefault();
+  const canvas = document.getElementById('qrCanvas');
+  const d = currentQRData;
+  const filename = `${d.nameCN}_${d.id}_crew_qr.png`;
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = filename;
+  a.click();
 }
 
 function goBack() {
@@ -137,7 +243,7 @@ function goBack() {
   document.getElementById('searchView').style.display = 'block';
 }
 
-function esc(s) { return String(s).replace(/'/g,"\\'"); }
+function esc(s) { return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
 function showLoading(show) { document.getElementById('loading').classList.toggle('show', show); }
 </script>
 </body>
