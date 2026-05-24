@@ -91,6 +91,18 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwNniD-7Uwpus7k-ZhW
 const BG_URL = "https://i.imgur.com/N2Ktl01.jpeg";
 let cachedData = null;
 let currentQRData = null;
+let fontsLoaded = false;
+
+// Preload KaiTi font for canvas
+async function loadFonts() {
+  if (fontsLoaded) return;
+  try {
+    const kaiti = new FontFace('KaiTi', 'url(https://fonts.gstatic.com/ea/cwtexkai/v3/CWTex-Kai-Regular.woff)');
+    const loaded = await kaiti.load();
+    document.fonts.add(loaded);
+  } catch(e) {}
+  fontsLoaded = true;
+}
 
 document.getElementById('searchInput').addEventListener('keypress', e => { if(e.key==='Enter') doSearch(); });
 
@@ -142,6 +154,7 @@ async function showQR(id, nameCN, nameEN, crewRole) {
   document.getElementById('searchView').style.display = 'none';
   document.getElementById('qrView').classList.add('show');
   showLoading(true);
+  await loadFonts();
   await generateQRCanvas(id, nameCN, nameEN, crewRole);
   showLoading(false);
 }
@@ -151,10 +164,7 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
   const canvas = document.getElementById('qrCanvas');
   const ctx = canvas.getContext('2d');
 
-  const [bgImg, qrImg] = await Promise.all([
-    loadImage(BG_URL),
-    loadImage(qrApiUrl)
-  ]);
+  const [bgImg, qrImg] = await Promise.all([loadImage(BG_URL), loadImage(qrApiUrl)]);
 
   const W = 360, H = 560;
   canvas.width = W;
@@ -163,7 +173,7 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
   // Background
   ctx.drawImage(bgImg, 0, 0, W, H);
 
-  // Subtle dark overlay only on bottom half for text readability
+  // Gradient overlay
   const grad = ctx.createLinearGradient(0, H * 0.35, 0, H);
   grad.addColorStop(0, 'rgba(10,5,2,0)');
   grad.addColorStop(0.4, 'rgba(10,5,2,0.55)');
@@ -171,24 +181,21 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  // QR Code — centered, sitting in upper-middle area
+  // QR Code
   const qrSize = 210;
   const qrX = (W - qrSize) / 2;
-  const qrY = H * 0.42; // ~100px from top
+  const qrY = H * 0.42;
 
-  // White QR background with padding
   ctx.fillStyle = '#ffffff';
   ctx.beginPath();
   ctx.roundRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20, 10);
   ctx.fill();
-
-  // Draw QR
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
-  // Text block starts below QR
-  const textStart = qrY + qrSize + 40;
+  // Text block
+  const textStart = qrY + qrSize + 36;
 
-  // Thin gold divider
+  // Gold divider
   ctx.strokeStyle = 'rgba(200,169,110,0.5)';
   ctx.lineWidth = 0.8;
   ctx.beginPath();
@@ -196,31 +203,49 @@ async function generateQRCanvas(id, nameCN, nameEN, crewRole) {
   ctx.lineTo(W - 60, textStart - 16);
   ctx.stroke();
 
-  // Chinese name — medium size
-  ctx.fillStyle = '#f0e6d3';
-  ctx.font = 'bold 18px "KaiTi", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(nameCN, W / 2, textStart + 5);
+  // --- Same-line name: KaiTi (CN) + Montserrat (EN) ---
+  const cnFontSize = 20;
+  const enFontSize = 12;
+  const nameY = textStart + 8;
+  const gap = 10; // gap between CN and EN
 
-  // English name
-  ctx.fillStyle = 'rgba(240,230,211,0.6)';
-  ctx.font = '14px Montserrat, sans-serif';
-  ctx.fillText(nameEN, W / 2, textStart + 25);
+  // Measure CN width with KaiTi
+  ctx.font = `bold ${cnFontSize}px KaiTi, "Noto Serif SC", serif`;
+  const cnW = ctx.measureText(nameCN).width;
+
+  // Measure EN width with Montserrat
+  ctx.font = `${enFontSize}px Montserrat, sans-serif`;
+  const enW = ctx.measureText(nameEN).width;
+
+  const totalNameW = cnW + gap + enW;
+  const nameStartX = (W - totalNameW) / 2;
+
+  // Draw CN name
+  ctx.fillStyle = '#f0e6d3';
+  ctx.font = `bold ${cnFontSize}px KaiTi, "Noto Serif SC", serif`;
+  ctx.textAlign = 'left';
+  ctx.fillText(nameCN, nameStartX, nameY);
+
+  // Draw EN name (same baseline, slightly lower to align visually)
+  ctx.fillStyle = 'rgba(240,230,211,0.65)';
+  ctx.font = `${enFontSize}px Montserrat, sans-serif`;
+  ctx.fillText(nameEN, nameStartX + cnW + gap, nameY - 2);
 
   // Role
   ctx.fillStyle = '#c8a96e';
-  ctx.font = '600 12px "KaiTi", sans-serif';
-  ctx.fillText(crewRole, W / 2, textStart + 25);
+  ctx.font = '600 12px Montserrat, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(crewRole, W / 2, textStart + 30);
 
   // ID
   ctx.fillStyle = 'rgba(200,169,110,0.45)';
   ctx.font = '10px Montserrat, sans-serif';
-  ctx.fillText(`ID: ${id}`, W / 2, textStart + 75);
+  ctx.fillText(`ID: ${id}`, W / 2, textStart + 48);
 
-  // Event name at very bottom
+  // Event name
   ctx.fillStyle = 'rgba(240,230,211,0.22)';
   ctx.font = '8px Montserrat, sans-serif';
-  ctx.fillText('寻昔纪远 · CHINESE CULTURE CAMP 2026', W / 2, H - 16);
+  ctx.fillText('寻昔纪远 · CULTURE CAMP 2026', W / 2, H - 16);
 }
 
 function loadImage(src) {
@@ -237,10 +262,9 @@ function downloadQR(e) {
   e.preventDefault();
   const canvas = document.getElementById('qrCanvas');
   const d = currentQRData;
-  const filename = `${d.nameCN}_${d.id}_crew_qr.png`;
   const a = document.createElement('a');
   a.href = canvas.toDataURL('image/png');
-  a.download = filename;
+  a.download = `${d.nameCN}_${d.id}_crew_qr.png`;
   a.click();
 }
 
